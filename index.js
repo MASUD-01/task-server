@@ -7,6 +7,7 @@ const port = process.env.PORT || 5000
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const cors = require('cors');
 // require('dotenv').config();
+const ObjectId = require('mongodb').ObjectId
 
 //middleware
 app.use(cors());
@@ -21,9 +22,14 @@ async function run() {
     try {
         await client.connect();
         const userCollection = client.db('taskTodo').collection('todo');
+        const taskCompleted = client.db('taskTodo').collection('completed');
 
         app.get('/task', async (req, res) => {
             const users = await userCollection.find().toArray();
+            res.send(users);
+        });
+        app.get('/completed', async (req, res) => {
+            const users = await taskCompleted.find().toArray();
             res.send(users);
         });
 
@@ -32,6 +38,19 @@ async function run() {
             const result = await userCollection.insertOne(product);
             console.log(result)
             res.send(result);
+        })
+        app.post('/completed', async (req, res) => {
+            const product = req.body;
+            const result = await taskCompleted.insertOne(product);
+            console.log(result)
+            res.send(result);
+        })
+
+        app.delete('/task/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.deleteOne(query)
+            res.send(result)
         })
     }
     finally {
