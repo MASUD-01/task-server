@@ -39,19 +39,19 @@ async function run() {
             res.send(result);
         });
 
-        // app.put('/task/:id', async (req, res) => {
-        //     const id = req.params.id
-        //     const updatetask = req.body
-        //     const filter = { _id: ObjectId(id) }
-        //     const options = { upsert: true }
-        //     const updateDoc = {
-        //         $set: {
-        //             tas: updatetask
-        //         }
-        //     }
-        //     const result = await userCollection.updateOne(filter, updateDoc, options)
-        //     res.send(result)
-        // })
+        app.put('/task/:id', async (req, res) => {
+            const id = req.params.id
+            const updatetask = req.body
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: {
+                    task: updatetask.task
+                }
+            }
+            const result = await userCollection.updateOne(filter, updateDoc, options)
+            res.send(result)
+        })
 
         app.post('/task', async (req, res) => {
             const product = req.body;
